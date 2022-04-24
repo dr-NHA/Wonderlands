@@ -2,6 +2,19 @@
 ## *The Original Wonderlands Cheat Table Edited And Revamped By: dr NHA*
 
 # **Update Info:**
+## *Update Name: V4.02*
+
+**1. Added / Fixed Primordial Gear Drop Chance**
+
+**2. More Lag Fixes For The ModTick**
+
+**3. More Stable Delete All Pickups**
+
+**4. Should Be Less Crash Issues**
+
+**-------------------------------------------**
+
+# **Update Info:**
 ## *Update Name: Hotfix For V4.1*
 
 *Kraqur Leaving Update*
@@ -12,6 +25,8 @@
 
 **3. Added A New Footer And Setup The Title Without Kraqurs Name**
 
+
+**-------------------------------------------**
 
 ## *Update Name: V4.1*
 
