@@ -1,8 +1,28 @@
 # **NHA Wonderlands**
 ## *The Original Wonderlands Cheat Table Edited And Revamped By: dr NHA*
 
+# **Direct Download:**
+https://github.com/dr-NHA/Wonderlands/archive/refs/heads/NHA_Wonderlands.zip
+
+**-------------------------------------------**
+
 # **Update Info:**
-## *Update Name: V4.02*
+## *Update Name: V4.25*
+
+**0.5 Source Code Has Been Split Into Several Lua Files To Make It Easier To View And Update Code!**
+
+**1. Added A New UI For Player Management!**
+
+**2. Added Some Stuff For The Skill Tree Editor!**
+
+**3. Fixed Some Teleports!**
+
+**4. Many More Fixes!!!**
+
+**-------------------------------------------**
+
+# **Update Info:**
+## *Update Name: V4.2*
 
 **1. Added / Fixed Primordial Gear Drop Chance**
 
