@@ -1,6 +1,8 @@
 # **NHA Wonderlands**
 ## *The Original Wonderlands Cheat Table Edited And Revamped By: dr NHA*
 
+**Download The Zip, Take The CT And Extract To Anywhere U Want, The Other Folders And Or Files Other Than The .CT Is For Storing The Code Somewhere For Those That Want To Read It!!**
+
 # **Direct Download:**
 https://github.com/dr-NHA/Wonderlands/archive/refs/heads/NHA_Wonderlands.zip
 
