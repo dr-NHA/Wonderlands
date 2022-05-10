@@ -1,18 +1,16 @@
 
-
 Wonderlands.LootsplosionRequiresReset=false;
 
 function _EnableLootExplosion(EnemyAddress)
-
 local Address=NHA_CE.HEX.ConvertFromInt64(GetAIBalanceState(EnemyAddress));
 
-local weapons =   readFloat('[[[[[['..Address..']+280]+0]+50]+220]+48]+228')
-local shields =   readFloat('[[[[[['..Address..']+280]+0]+50]+330]+48]+228')
-local spells =readFloat('[[[[[['..Address..']+280]+0]+50]+3B8]+48]+228')
-local melee = readFloat('[[[[[['..Address..']+280]+0]+50]+440]+48]+228')
-local rings = readFloat('[[[[[['..Address..']+280]+0]+50]+4C8]+48]+228')
-local amulets =   readFloat('[[[[[['..Address..']+280]+0]+50]+550]+48]+228')
-local pauldrons = readFloat('[[[[[['..Address..']+280]+0]+50]+5D8]+48]+228')
+local weapons =   readFloat('[[[[['..Address..'+280]+0]+50]+220]+48]+228')
+local shields =   readFloat('[[[[['..Address..'+280]+0]+50]+330]+48]+228')
+local spells =readFloat('[[[[['..Address..'+280]+0]+50]+3B8]+48]+228')
+local melee = readFloat('[[[[['..Address..'+280]+0]+50]+440]+48]+228')
+local rings = readFloat('[[[[['..Address..'+280]+0]+50]+4C8]+48]+228')
+local amulets =   readFloat('[[[[['..Address..'+280]+0]+50]+550]+48]+228')
+local pauldrons = readFloat('[[[[['..Address..'+280]+0]+50]+5D8]+48]+228')
 
 if weapons == 1 and
 shields == 1 and
@@ -22,31 +20,31 @@ shields == 1 and
    amulets == 1 and
   pauldrons == 1 then
 --TEST
- -- print("Entity: "..Address.." Enabling Loot Splosion");
+ print("Entity: "..Address.." Enabling Loot Splosion");
 
-writeFloat('[[[['..Address..']+280]+0]+50]+258',9999999)  --Weapons Probability  --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+368',9999999)  --Shields Probability  --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+3F0',9999999)  --Spells Probability   --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+478',9999999)  --Melee Probability   --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+500',9999999)  --Rings Probability   --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+588',9999999)  --Amulets Probability   --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+610',9999999)  --Pauldron Probability   --Good
+writeFloat('[[['..Address..'+280]+0]+50]+258',9999999)  --Weapons Probability  --Good
+writeFloat('[[['..Address..'+280]+0]+50]+368',9999999)  --Shields Probability  --Good
+writeFloat('[[['..Address..'+280]+0]+50]+3F0',9999999)  --Spells Probability   --Good
+writeFloat('[[['..Address..'+280]+0]+50]+478',9999999)  --Melee Probability   --Good
+writeFloat('[[['..Address..'+280]+0]+50]+500',9999999)  --Rings Probability   --Good
+writeFloat('[[['..Address..'+280]+0]+50]+588',9999999)  --Amulets Probability   --Good
+writeFloat('[[['..Address..'+280]+0]+50]+610',9999999)  --Pauldron Probability   --Good
 
-writeFloat('[[[['..Address..']+280]+0]+50]+290',Wonderlands.LootSplosionAmounts.Weapons)--Weapons Times to pull -- Good
-writeFloat('[[[['..Address..']+280]+0]+50]+3A0',Wonderlands.LootSplosionAmounts.Shields)--Shields Times to pull --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+428',Wonderlands.LootSplosionAmounts.Spells)--Spells Times to pull  --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+4B0',Wonderlands.LootSplosionAmounts.Melee)--Melee Times to pull  --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+538',Wonderlands.LootSplosionAmounts.Rings)--Rings Times to pull  --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+5C0',Wonderlands.LootSplosionAmounts.Amulets)--Amulets Times to pull  --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+648',Wonderlands.LootSplosionAmounts.Pauldron)--Pauldron Times to pull  --Good
+writeFloat('[[['..Address..'+280]+0]+50]+290',Wonderlands.LootSplosionAmounts.Weapons)--Weapons Times to pull -- Good
+writeFloat('[[['..Address..'+280]+0]+50]+3A0',Wonderlands.LootSplosionAmounts.Shields)--Shields Times to pull --Good
+writeFloat('[[['..Address..'+280]+0]+50]+428',Wonderlands.LootSplosionAmounts.Spells)--Spells Times to pull  --Good
+writeFloat('[[['..Address..'+280]+0]+50]+4B0',Wonderlands.LootSplosionAmounts.Melee)--Melee Times to pull  --Good
+writeFloat('[[['..Address..'+280]+0]+50]+538',Wonderlands.LootSplosionAmounts.Rings)--Rings Times to pull  --Good
+writeFloat('[[['..Address..'+280]+0]+50]+5C0',Wonderlands.LootSplosionAmounts.Amulets)--Amulets Times to pull  --Good
+writeFloat('[[['..Address..'+280]+0]+50]+648',Wonderlands.LootSplosionAmounts.Pauldron)--Pauldron Times to pull  --Good
 
-writeFloat('[[[[[['..Address..']+280]+0]+50]+220]+48]+228',9999999)   --Legendary Weapons --Good
-writeFloat('[[[[[['..Address..']+280]+0]+50]+330]+48]+228',9999999)   --Legendary Shield  --Good
-writeFloat('[[[[[['..Address..']+280]+0]+50]+3B8]+48]+228',9999999)   --Legendary Spells  --Good
-writeFloat('[[[[[['..Address..']+280]+0]+50]+440]+48]+228',9999999)   --Legendary Melee  --Good
-writeFloat('[[[[[['..Address..']+280]+0]+50]+4C8]+48]+228',9999999)   --Legendary Rings  --Good
-writeFloat('[[[[[['..Address..']+280]+0]+50]+550]+48]+228',9999999)   --Legendary Amulets  --Good
-writeFloat('[[[[[['..Address..']+280]+0]+50]+5D8]+48]+228',9999999)   --Legendary Pauldron  --Good
+writeFloat('[[[[['..Address..'+280]+0]+50]+220]+48]+228',9999999)   --Legendary Weapons --Good
+writeFloat('[[[[['..Address..'+280]+0]+50]+330]+48]+228',9999999)   --Legendary Shield  --Good
+writeFloat('[[[[['..Address..'+280]+0]+50]+3B8]+48]+228',9999999)   --Legendary Spells  --Good
+writeFloat('[[[[['..Address..'+280]+0]+50]+440]+48]+228',9999999)   --Legendary Melee  --Good
+writeFloat('[[[[['..Address..'+280]+0]+50]+4C8]+48]+228',9999999)   --Legendary Rings  --Good
+writeFloat('[[[[['..Address..'+280]+0]+50]+550]+48]+228',9999999)   --Legendary Amulets  --Good
+writeFloat('[[[[['..Address..'+280]+0]+50]+5D8]+48]+228',9999999)   --Legendary Pauldron  --Good
 end
 end
 
@@ -54,50 +52,38 @@ function _DisableLootExplosion(EnemyAddress)
 if Wonderlands.LootsplosionRequiresReset==true then
 local Address=NHA_CE.HEX.ConvertFromInt64(GetAIBalanceState(EnemyAddress));
 
+local weapons =   readFloat('[[[[['..Address..'+280]+0]+50]+220]+48]+228')
+local shields =   readFloat('[[[[['..Address..'+280]+0]+50]+330]+48]+228')
+local spells =readFloat('[[[[['..Address..'+280]+0]+50]+3B8]+48]+228')
+local melee = readFloat('[[[[['..Address..'+280]+0]+50]+440]+48]+228')
+local rings = readFloat('[[[[['..Address..'+280]+0]+50]+4C8]+48]+228')
+local amulets =   readFloat('[[[[['..Address..'+280]+0]+50]+550]+48]+228')
+local pauldrons = readFloat('[[[[['..Address..'+280]+0]+50]+5D8]+48]+228')
 
-local weapons =   readFloat('[[[[[['..Address..']+280]+0]+50]+220]+48]+228')
-local shields =   readFloat('[[[[[['..Address..']+280]+0]+50]+330]+48]+228')
-local spells =readFloat('[[[[[['..Address..']+280]+0]+50]+3B8]+48]+228')
-local melee = readFloat('[[[[[['..Address..']+280]+0]+50]+440]+48]+228')
-local rings = readFloat('[[[[[['..Address..']+280]+0]+50]+4C8]+48]+228')
-local amulets =   readFloat('[[[[[['..Address..']+280]+0]+50]+550]+48]+228')
-local pauldrons = readFloat('[[[[[['..Address..']+280]+0]+50]+5D8]+48]+228')
 
-if weapons ~= 1 or
-shields ~= 1 or
- spells ~= 1 or
-  melee ~= 1 or
- rings ~= 1 or
-   amulets ~= 1 or
-  pauldrons ~= 1 then
---TEST
- -- print("Entity: "..Address.." Disabling Loot Splosion");
-Wonderlands.LootsplosionRequiresReset=false;
+writeFloat('[[['..Address..'+280]+0]+50]+258',1)  --Weapons Probability  --Good
+writeFloat('[[['..Address..'+280]+0]+50]+368',1)  --Shields Probability  --Good
+writeFloat('[[['..Address..'+280]+0]+50]+3F0',1)  --Spells Probability   --Good
+writeFloat('[[['..Address..'+280]+0]+50]+478',1)  --Melee Probability   --Good
+writeFloat('[[['..Address..'+280]+0]+50]+500',1)  --Rings Probability   --Good
+writeFloat('[[['..Address..'+280]+0]+50]+588',1)  --Amulets Probability   --Good
+writeFloat('[[['..Address..'+280]+0]+50]+610',1)  --Pauldron Probability   --Good
 
-writeFloat('[[[['..Address..']+280]+0]+50]+258',1)  --Weapons Probability  --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+368',1)  --Shields Probability  --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+3F0',1)  --Spells Probability   --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+478',1)  --Melee Probability   --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+500',1)  --Rings Probability   --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+588',1)  --Amulets Probability   --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+610',1)  --Pauldron Probability   --Good
+writeFloat('[[['..Address..'+280]+0]+50]+290',1)--Weapons Times to pull -- Good
+writeFloat('[[['..Address..'+280]+0]+50]+3A0',1)--Shields Times to pull --Good
+writeFloat('[[['..Address..'+280]+0]+50]+428',1)--Spells Times to pull  --Good
+writeFloat('[[['..Address..'+280]+0]+50]+4B0',1)--Melee Times to pull  --Good
+writeFloat('[[['..Address..'+280]+0]+50]+538',1)--Rings Times to pull  --Good
+writeFloat('[[['..Address..'+280]+0]+50]+5C0',1)--Amulets Times to pull  --Good
+writeFloat('[[['..Address..'+280]+0]+50]+648',1)--Pauldron Times to pull  --Good
 
-writeFloat('[[[['..Address..']+280]+0]+50]+290',1)--Weapons Times to pull -- Good
-writeFloat('[[[['..Address..']+280]+0]+50]+3A0',1)--Shields Times to pull --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+428',2)--Spells Times to pull  --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+4B0',1)--Melee Times to pull  --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+538',1)--Rings Times to pull  --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+5C0',1)--Amulets Times to pull  --Good
-writeFloat('[[[['..Address..']+280]+0]+50]+648',1)--Pauldron Times to pull  --Good
-
-writeFloat('[[[[[['..Address..']+280]+0]+50]+220]+48]+228',1)   --Legendary Weapons --Good
-writeFloat('[[[[[['..Address..']+280]+0]+50]+330]+48]+228',1)   --Legendary Shield  --Good
-writeFloat('[[[[[['..Address..']+280]+0]+50]+3B8]+48]+228',1)   --Legendary Spells  --Good
-writeFloat('[[[[[['..Address..']+280]+0]+50]+440]+48]+228',1)   --Legendary Melee  --Good
-writeFloat('[[[[[['..Address..']+280]+0]+50]+4C8]+48]+228',1)   --Legendary Rings  --Good
-writeFloat('[[[[[['..Address..']+280]+0]+50]+550]+48]+228',1)   --Legendary Amulets  --Good
-writeFloat('[[[[[['..Address..']+280]+0]+50]+5D8]+48]+228',1)   --Legendary Pauldron  --Good
-end
+writeFloat('[[[[['..Address..'+280]+0]+50]+220]+48]+228',1)   --Legendary Weapons --Good
+writeFloat('[[[[['..Address..'+280]+0]+50]+330]+48]+228',1)   --Legendary Shield  --Good
+writeFloat('[[[[['..Address..'+280]+0]+50]+3B8]+48]+228',1)   --Legendary Spells  --Good
+writeFloat('[[[[['..Address..'+280]+0]+50]+440]+48]+228',1)   --Legendary Melee  --Good
+writeFloat('[[[[['..Address..'+280]+0]+50]+4C8]+48]+228',1)   --Legendary Rings  --Good
+writeFloat('[[[[['..Address..'+280]+0]+50]+550]+48]+228',1)   --Legendary Amulets  --Good
+writeFloat('[[[[['..Address..'+280]+0]+50]+5D8]+48]+228',1)   --Legendary Pauldron  --Good
 end
 end
 
@@ -124,6 +110,9 @@ if Wonderlands.LootSplosion and Wonderlands.LootsplosionRequiresReset==false the
 Foreach_IsAI_PlayerTargetable(_EnableLootExplosion);
 elseif Wonderlands.LootsplosionRequiresReset==true then
 Foreach_IsAI_PlayerTargetable(_DisableLootExplosion);
+Wonderlands.LootsplosionRequiresReset=false;
+else
+Foreach_IsAI_PlayerTargetable(_DisableLootExplosion);
 end
 end
 end
@@ -131,9 +120,7 @@ end
 
 
 --[[
-
 Lootsplosion UI
-
 ]]
 function Wonderlands.OpenLootsplosionUI()
 if LootsplosionUI.isForegroundWindow()==false then
@@ -238,5 +225,3 @@ Wonderlands.LootSplosionAmounts.Pauldron=ExtractValue(sender);
 Wonderlands.LootsplosionRequiresReset=true;
   return key
 end
-
-

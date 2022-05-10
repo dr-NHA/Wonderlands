@@ -1,6 +1,5 @@
 
-Wonderlands.UI_Tick=function();end--Blank UI Function
-
+Wonderlands.CreateNewModThread=function()
 if Wonderlands.ModTick~=nil then
 Wonderlands.ModTick.suspend();
 end
@@ -8,12 +7,13 @@ end
  Wonderlands.ModTick = createThread(function(timer)
 while true do
 TimerTick()
-Wonderlands.UI_Tick();
      sleep(250)
    end
    return 50
  end)
  Wonderlands.ModTick.Name="NHA_Wonderlands.ModTick";
+end
+Wonderlands.CreateNewModThread();
 
 if Wonderlands.ModArray~=nil then
 for i=#Wonderlands.ModArray,1,-1 do

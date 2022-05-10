@@ -30,9 +30,158 @@ end
 end
 
 
+function DoIfIsntNull(Object,action)
+if Object~=nil then
+action(Object);
+end;
+end
+
+function BoolToObject(bool,falseobject,trueobject)
+if bool then
+return trueobject
+else
+return falseobject
+end
+end
+
+local N2H=function(N);return NHA_CE.HEX.ConvertFromInt64(N);end
+
+function FGetSetBool(GetOffset,off_object,on_object)return {
+Address=function();return GetAddress(GetOffset());end,
+HexAddress=function();return NHA_CE.HEX.GetAddress(GetOffset());end,
+Get=function();return readByte(GetOffset())==on_object;end,
+Set=function(Value);WriteByte(GetOffset(),BoolToObject(Value,off_object,on_object));end
+};end
+
+function FGetSetInteger(GetOffset)return {
+Address=function();return GetAddress(GetOffset());end,
+HexAddress=function();return NHA_CE.HEX.GetAddress(GetOffset());end,
+Get=function();return readInteger(GetOffset());end,
+Set=function(Value);WriteInteger(GetOffset(),Value);end
+};end
+
+function FGetSetIntegerIndexed(GetOffset)return {
+Address=function(ObjectAddress,Indexed);return GetAddress(GetOffset(ObjectAddress,Indexed));end,
+HexAddress=function(ObjectAddress,Indexed);return NHA_CE.HEX.GetAddress(GetOffset(ObjectAddress,Indexed));end,
+Get=function(ObjectAddress,Indexed);return readInteger(GetOffset(ObjectAddress,Indexed));end,
+Set=function(ObjectAddress,Indexed,Value);WriteInteger(GetOffset(ObjectAddress,Indexed),Value);end
+};end
+
+
+function FGetSetPointer(GetOffset)return {
+Address=function();return GetAddress(GetOffset());end,
+HexAddress=function();return NHA_CE.HEX.GetAddress(GetOffset());end,
+Get=function();return readPointer(GetOffset());end,
+HexGet=function();return N2H(readPointer(GetOffset()));end,
+Set=function(Value);WritePointer(GetOffset(),Value);end
+};end
+
+function FGetSetPointerIndexed(GetOffset)return {
+Address=function(ObjectAddress,Indexed);return GetAddress(GetOffset(ObjectAddress,Indexed));end,
+HexAddress=function(ObjectAddress,Indexed);return NHA_CE.HEX.GetAddress(GetOffset(ObjectAddress,Indexed));end,
+Get=function(ObjectAddress,Indexed);return readPointer(GetOffset(ObjectAddress,Indexed));end,
+HexGet=function(ObjectAddress,Indexed);return N2H(readPointer(GetOffset(ObjectAddress,Indexed)));end,
+Set=function(ObjectAddress,Indexed,Value);WritePointer(GetOffset(ObjectAddress,Indexed),Value);end
+};end
+
+
+function FGetSetFloat(GetOffset);return {
+Address=function();return GetAddress(GetOffset());end,
+HexAddress=function();return NHA_CE.HEX.GetAddress(GetOffset());end,
+Get=function();return readFloat(GetOffset());end,
+Set=function(Value);WriteFloat(GetOffset(),Value);end
+};end
 
 
 
+
+function FGetSetVector3(GetOffset);
+local V_M={
+X=FGetSetFloat(GetOffset),
+Y=FGetSetFloat(function();return GetOffset()..'+4';end),
+Z=FGetSetFloat(function();return GetOffset()..'+8';end),
+ToString=function();return 
+"X: "..NilReadProtect(X.Get())..", "..
+"Y: "..NilReadProtect(Y.Get())..", "..
+"Z "..NilReadProtect(Z.Get());end,
+};
+V_M.Value={
+Get=function()
+return {
+V_M.X.Get(),
+V_M.Y.Get(),
+V_M.Z.Get()
+};end,
+Set=function(X,Y,Z)
+V_M.X.Set(X);
+V_M.Y.Set(Y);
+V_M.Z.Set(Z);
+end,
+};
+return V_M;
+end
+
+function PATH_GetSetVector3(GetOffset);
+local V_M={
+X=PATH_GetSetFloat(function(Class);return GetOffset(Class);end),
+Y=PATH_GetSetFloat(function(Class);return GetOffset(Class)..'+4';end),
+Z=PATH_GetSetFloat(function(Class);return GetOffset(Class)..'+8';end),
+ToString=function(Class);return 
+"X: "..NilReadProtect(X.Get(Class))..", "..
+"Y: "..NilReadProtect(Y.Get(Class))..", "..
+"Z "..NilReadProtect(Z.Get(Class));end,
+};
+V_M.Value={
+Get=function(Class)
+return {
+V_M.X.Get(Class),
+V_M.Y.Get(Class),
+V_M.Z.Get(Class)
+};end,
+Set=function(Class,X,Y,Z)
+V_M.X.Set(Class,X);
+V_M.Y.Set(Class,Y);
+V_M.Z.Set(Class,Z);
+end,
+};
+return V_M;
+end
+
+function PATH_GetSetFloat(PathAlgorithum);return {
+Address=function(Class);return GetAddress(PathAlgorithum(Class));end,
+HexAddress=function(Class);return NHA_CE.HEX.GetAddress(PathAlgorithum(Class));end,
+Get=function(Class);return readFloat(PathAlgorithum(Class));end,
+Set=function(Class,Value);WriteFloat(PathAlgorithum(Class),Value);end
+};end
+
+function PATH_GetSetPointer(PathAlgorithum);return {
+Address=function(Class);return GetAddress(PathAlgorithum(Class));end,
+HexAddress=function(Class);return NHA_CE.HEX.GetAddress(PathAlgorithum(Class));end,
+Get=function(Class);return readPointer(PathAlgorithum(Class));end,
+Set=function(Class,Value);WritePointer(PathAlgorithum(Class),Value);end
+};end
+
+function PATH_GetSetPointerIndexed(PathAlgorithum);return {
+Address=function(Class,Indexed);return GetAddress(PathAlgorithum(Class,Indexed));end,
+HexAddress=function(Class,Indexed);return NHA_CE.HEX.GetAddress(PathAlgorithum(Class,Indexed));end,
+Get=function(Class,Indexed);return readPointer(PathAlgorithum(Class,Indexed));end,
+Set=function(Class,Indexed,Value);WritePointer(PathAlgorithum(Class,Indexed),Value);end
+};end
+
+
+function PATH_GetSetInteger(PathAlgorithum);return {
+Address=function(Class);return GetAddress(PathAlgorithum(Class));end,
+HexAddress=function(Class);return NHA_CE.HEX.GetAddress(PathAlgorithum(Class));end,
+Get=function(Class);return readInteger(PathAlgorithum(Class));end,
+Set=function(Class,Value);WriteInteger(PathAlgorithum(Class),Value);end
+};end
+
+function PATH_GetSetIntegerIndexed(PathAlgorithum);return {
+Address=function(Class,Indexed);return GetAddress(PathAlgorithum(Class,Indexed));end,
+HexAddress=function(Class,Indexed);return NHA_CE.HEX.GetAddress(PathAlgorithum(Class,Indexed));end,
+Get=function(Class,Indexed);return readInteger(PathAlgorithum(Class,Indexed));end,
+Set=function(Class,Indexed,Value);WriteInteger(PathAlgorithum(Class,Indexed),Value);end
+};end
 
 --[[
 	NHA Wonderlands (UE) Hook3r Functions

@@ -4,13 +4,14 @@ function PlayerUI_FormClose(sender)
 return caHide --Possible options: caHide, caFree, caMinimize, caNone
 end
 
+
 function OpenPlayerUI(memrec)
 FixSyncIssue(function()
-if PlayerUI.isForegroundWindow()==false then
+PlayerUI.Hide();
+PlayerUI.WindowState = 'wsNormal'
 PlayerUI.centerScreen();
 PlayerUI.bringToFront();
 PlayerUI.Show();
-end
 if memrec~=nil then
 if memrec.Active then
 memrec.Active=false;
@@ -18,6 +19,7 @@ end
 end
 end,70);
 end
+
 
 
 Wonderlands.UI_Tick=function()
@@ -28,26 +30,25 @@ end
 end
 
 function Wonderlands.AutoModTick()
-if GetPlayerCheck() then
+if Players.ErrorCheck() then
 PlayerIndex=0;
-ForeachPlayer(function(PlayerClass)
-Wonderlands.PlayerAutoModFunction(PlayerIndex,PlayerClass);
+ForeachPlayer(function(Player)
+Wonderlands.PlayerAutoModFunction(PlayerIndex,Player);
 PlayerIndex=PlayerIndex+1;
 end);
 end
 end
 
 
-function Wonderlands.PlayerAutoModFunction(PlayerIndex,PlayerClass)
-OnGodmodeNeeded(PlayerIndex,PlayerClass);
-OnInfinateAmmoNeeded(PlayerIndex,PlayerClass);
-OnSuperJumpNeeded(PlayerIndex,PlayerClass);
-OnSuperSpeedNeeded(PlayerIndex,PlayerClass);
-OnMaxMoneyNeeded(PlayerIndex,PlayerClass);
-OnNoclipNeeded(PlayerIndex,PlayerClass);
-OnDamageNeeded(PlayerIndex,PlayerClass);
-OnInvisibleNeeded(PlayerIndex,PlayerClass);
-OnNoTargetNeeded(PlayerIndex,PlayerClass);
+function Wonderlands.PlayerAutoModFunction(PlayerIndex,Player)
+OnGodmodeNeeded(PlayerIndex,Player);
+OnDamageNeeded(PlayerIndex,Player);
+OnInfinateAmmoNeeded(PlayerIndex,Player);
+OnSuperJumpNeeded(PlayerIndex,Player);
+OnSuperSpeedNeeded(PlayerIndex,Player);
+OnMaxMoneyNeeded(PlayerIndex,Player);
+OnNoclipNeeded(PlayerIndex,Player);
+OnNoTargetNeeded(PlayerIndex,Player);
 end
 
 
@@ -77,16 +78,14 @@ Wonderlands.PresetPlayerAutoMod(),--Player 3
 
 
 function UpdatePlayerListIndex(index)
-local CAP=ReadInteger(PlayerArrayCount());
+local CAP=Players.Array.Count.Get();
 if index<CAP then
-local PlayerAddress=NHA_CE.HEX.GetAddress(ReadPointer(GetPlayerX(index)));
-local N=GetPlayerName(PlayerAddress);
+local Player=Players.GetPlayer(index);
+local N=Player.Name();
 if N==nil then
 N="Not Connected Yet...";
 end
-AddPlayerListIndex(index,"["..PlayerAddress.."] "..N,50,true);
-
-
+AddPlayerListIndex(index,"["..NHA_CE.HEX.ConvertFromInt64(Player.Address()).."] "..N,50,true);
 else
 DeletePlayerListIndex(index);
 end
@@ -111,8 +110,8 @@ end
 
 
 function UpdateUIPlayerList()
-if GetPlayerCheck() then
-local CAP=ReadInteger(PlayerArrayCount());
+if Players.ErrorCheck() then
+local CAP=Players.Array.Count.Get();
 PlayerUI_CurrentPlayersLabel.setCaption("Current Players: "..CAP);
 if CAP>0 then
 UpdatePlayerListIndex(0);
@@ -188,9 +187,9 @@ end
 
 function PlayerUI_ForeachSelectedPlayer(functionPlayerClass)
 local PlayerIndex=0;
-ForeachPlayer(function(PlayerClass)
+ForeachPlayer(function(Player)
 if IsPlayerUISelected(PlayerIndex) then
-functionPlayerClass(PlayerClass);
+functionPlayerClass(Player);
 end
 PlayerIndex=PlayerIndex+1;
 end);
@@ -199,34 +198,27 @@ end
 function PlayerUI_PrintPlayerInfoClick(sender)
 local PlayerIndex=0;
 ClearDebugInfo();
-PlayerUI_ForeachSelectedPlayer(function(PlayerClass)
-local PlayerAddress=NHA_CE.HEX.GetAddress(ReadPointer(PlayerClass));
+PlayerUI_ForeachSelectedPlayer(function(Player)
 PrintDebugInfo("Player Index: "..PlayerIndex);
-PrintDebugInfo("Address "..PlayerAddress);
-PrintDebugInfo("Name: "..GetPlayerName(PlayerAddress));
-PrintDebugInfo("Team Name: "..GetPlayerTeamName(PlayerClass));
-PrintDebugInfo("Animation Speed: "..GetGlobalAnimationSpeed(PlayerClass));
-PrintDebugInfo("Visible: "..BoolToString(IsPlayerVisible(PlayerClass) ,"False","True") );
-PrintDebugInfo("Money: "..GetPlayerMoney(PlayerClass));
-PrintDebugInfo("Crystals: "..GetPlayerCrystals(PlayerClass));
-PrintDebugInfo("Godmode: "..BoolToString(GetPlayerGodmode(PlayerClass) ,"Off","On"));
-local RGN=GetPlayerAmmoRegen(PlayerClass);
-PrintDebugInfo("Ammo Regen: "..BoolToString(RGN<1,BoolToString(RGN==1000000000,RGN,"Maximum"),"Default"));
-PrintDebugInfo("Gravity: "..BoolToString(GetGravity(PlayerClass)~=1 ,"Default",GetGravity(PlayerClass)) );
-PrintDebugInfo("Max Jump Count: "..BoolToString(GetPlayerMaxJumpCount(PlayerClass)~=1 ,"Default",GetPlayerMaxJumpCount(PlayerClass)) );
-PrintDebugInfo("Walk Speed: "..BoolToString(GetMaxWalkSpeed(PlayerClass)~=470 ,"Default",GetMaxWalkSpeed(PlayerClass)));
-PrintDebugInfo("Crouch Speed: "..BoolToString(GetMaxCrouchSpeed(PlayerClass)~=275 ,"Default",GetMaxCrouchSpeed(PlayerClass)) );
-PrintDebugInfo("Sprint Speed: "..BoolToString(GetMaxSprintSpeed(PlayerClass)~=720 ,"Default",GetMaxSprintSpeed(PlayerClass)) );
-PrintDebugInfo("Fly: "..BoolToString(GetPlayerFlyMode(PlayerClass) ,"Off","On"));
-PrintDebugInfo("Noclip: "..BoolToString(GetPlayerNoclip(PlayerClass) ,"Off","On"));
-PrintDebugInfo("Position.X: "..GetEntityPositionX(PlayerClass));
-PrintDebugInfo("Position.Y: "..GetEntityPositionY(PlayerClass));
-PrintDebugInfo("Position.Z: "..GetEntityPositionZ(PlayerClass));
-local DB=NHA_CE.HEX.ConvertFromInt64(GetLastHitBy(PlayerClass));
-if DB=="00" then
-DB="Nobody!";
-end
-PrintDebugInfo("Last Hit By: "..DB);
+PrintDebugInfo("Address "..NHA_CE.HEX.ConvertFromInt64(Player.Address()));
+PrintDebugInfo("Name: "..Player.Name());
+PrintDebugInfo("Team Name: "..Player.TeamName());
+PrintDebugInfo("Animation Speed: "..Entity.GlobalAnimationSpeed.Get(Player.PlayerCharacterPath));
+PrintDebugInfo("Visible: "..BoolToString(Player.IsVisible.Get() ,"False","True") );
+PrintDebugInfo("Money: "..Player.Currency.Money.Get());
+PrintDebugInfo("Crystals: "..Player.Currency.Crystals.Get());
+PrintDebugInfo("Godmode: "..BoolToString(Player.Godmode.Get() ,"Off","On"));
+PrintDebugInfo("Ammo Regen: "..Player.AmmoRegen.Get());
+PrintDebugInfo("Gravity: "..Player.Movement.Gravity.Get() );
+PrintDebugInfo("Max Jump Count: "..Player.Movement.MaxJumpCount.Get() );
+PrintDebugInfo("Walk Speed: "..Player.Movement.MaxWalkSpeed.Get());
+PrintDebugInfo("Crouch Speed: "..Player.Movement.MaxCrouchSpeed.Get() );
+PrintDebugInfo("Sprint Speed: "..Player.Movement.MaxSprintSpeed.Get());
+PrintDebugInfo("Fly: "..BoolToString(Player.FlyEnabled.Get() ,"Off","On"));
+PrintDebugInfo("Noclip: "..BoolToString(Player.Noclip.Get() ,"Off","On"));
+PrintDebugInfo("Position.X: "..Player.Position.X.Get());
+PrintDebugInfo("Position.Y: "..Player.Position.Y.Get());
+PrintDebugInfo("Position.Z: "..Player.Position.Z.Get());
 PrintDebugInfo(",");
 PlayerIndex=PlayerIndex+1;
 end);
@@ -251,9 +243,12 @@ PlayerUI.PlayerList.Items.Clear();
 
 
 function PlayerUI_GetDefaultValue(ValueRetFunction,ifnil)
+if ValueRetFunction==nil then
+return ifnil;
+end
 local DB=nil
-PlayerUI_ForeachSelectedPlayer(function(PlayerClass)
-if DB==nil then;DB=ValueRetFunction(PlayerClass);end
+PlayerUI_ForeachSelectedPlayer(function(Player)
+if DB==nil then;DB=ValueRetFunction(Player);end
 end);
 if DB==nil then
 return ifnil;
@@ -263,7 +258,7 @@ end
 end
 
 
-function PlayerUI_GetFirstSelectedPlayerClass()
+function PlayerUI_GetFirstSelectedPlayer()
 return PlayerUI_GetDefaultValue(function(PC)return PC;end,nil);
 end
 
@@ -271,8 +266,8 @@ end
 function PlayerUI_BoolButtonClickHandler(GetBool,SetBool,Refresh)
 local DB=PlayerUI_GetDefaultValue(GetBool,false);
 local INDEX=0;
-PlayerUI_ForeachSelectedPlayer(function(PlayerClass)
-SetBool(INDEX,PlayerClass,BoolSwap(DB));
+PlayerUI_ForeachSelectedPlayer(function(Player)
+SetBool(INDEX,Player,BoolSwap(DB));
 INDEX=INDEX+1;
 end);
 Refresh();
@@ -291,73 +286,63 @@ end
     Click Functions
 ]]
 
-function SetPlayerGodModeValue(Index,PlayerClass,DB)
-Wonderlands.PlayerAutoMod[Index+1].GodMode=DB;
-if DB then
-EnablePlayerGodmode(PlayerClass);
-else
-DisablePlayerGodmode(PlayerClass);
+function SetPlayerGodModeValue(PlayerIndex,Player,DB)
+Wonderlands.PlayerAutoMod[PlayerIndex+1].GodMode=DB;
+Player.Godmode.Set(DB);
 end
-end
-function OnGodmodeNeeded(PlayerIndex,PlayerClass)
+function OnGodmodeNeeded(PlayerIndex,Player)
 if Wonderlands.PlayerAutoMod[PlayerIndex+1].GodMode==true then
-EnablePlayerGodmode(PlayerClass);
+Player.Godmode.Set(true);
+Player.Health.Fill();
+Player.Shield.Fill();
 end
 end
 
 function PlayerUI_GodBoxClick(sender)
-PlayerUI_BoolButtonClickHandler(GetPlayerGodmode,SetPlayerGodModeValue,PlayerUI_RefreshGodModeButton);
+PlayerUI_BoolButtonClickHandler(
+function(Player);return Player.Godmode.Get();end,
+SetPlayerGodModeValue,
+PlayerUI_RefreshGodModeButton);
 end
 
 
 
-
-
-
-
-function SetPlayerInfinateAmmo(Index,PlayerClass,DB)
-Wonderlands.PlayerAutoMod[Index+1].InfinateAmmo=DB;
+function SetPlayerInfinateAmmo(PlayerIndex,Player,DB)
+Wonderlands.PlayerAutoMod[PlayerIndex+1].InfinateAmmo=DB;
 if DB then
-SetPlayerMaxAmmoRegen(PlayerClass);
+Player.MaxAmmoRegen();
 else
-SetPlayerNoAmmoRegen(PlayerClass);
+Player.ResetAmmoRegen();
 end
 end
 
 
-function OnInfinateAmmoNeeded(PlayerIndex,PlayerClass)
+function OnInfinateAmmoNeeded(PlayerIndex,Player)
 if Wonderlands.PlayerAutoMod[PlayerIndex+1].InfinateAmmo==true then
-SetPlayerMaxAmmoRegen(PlayerClass);
+Player.MaxAmmoRegen();
 end
-end
-
-
-function GetPlayerInfinateAmmo(PlayerClass)
-return GetPlayerAmmoRegen(PlayerClass)~=0;
 end
 
 function PlayerUI_AmmoBoxClick(sender)
-PlayerUI_BoolButtonClickHandler(GetPlayerInfinateAmmo,SetPlayerInfinateAmmo,PlayerUI_RefreshAmmoButton);
+PlayerUI_BoolButtonClickHandler(function(Player);return Player.AmmoRegen.Get()~=0;end,
+SetPlayerInfinateAmmo,
+PlayerUI_RefreshAmmoButton);
 end
 
 
 
-
-
-
-
-function PlayerUI_SetPlayerSuperJump(Index,PlayerClass,DB)
-Wonderlands.PlayerAutoMod[Index+1].SuperJump=DB;
-SetPlayerSuperJump(PlayerClass,DB);
+function PlayerUI_SetPlayerSuperJump(PlayerIndex,Player,DB)
+Wonderlands.PlayerAutoMod[PlayerIndex+1].SuperJump=DB;
+Player.Movement.SuperJump.Set(DB);
 end
 
 function PlayerUI_SuperJumpClick(sender)
-PlayerUI_BoolButtonClickHandler(GetPlayerSuperJump,PlayerUI_SetPlayerSuperJump,PlayerUI_RefreshSuperJumpButton);
+PlayerUI_BoolButtonClickHandler(function(Player);return Player.Movement.SuperJump.Get();end,PlayerUI_SetPlayerSuperJump,PlayerUI_RefreshSuperJumpButton);
 end
 
-function OnSuperJumpNeeded(PlayerIndex,PlayerClass)
+function OnSuperJumpNeeded(PlayerIndex,Player)
 if Wonderlands.PlayerAutoMod[PlayerIndex+1].SuperJump==true then
-SetPlayerSuperJump(PlayerClass,true);
+Player.Movement.SuperJump.Set(true);
 end
 end
 
@@ -368,25 +353,21 @@ end
 
 
 
-function PlayerUI_SetPlayerSuperSpeed(Index,PlayerClass,DB)
-Wonderlands.PlayerAutoMod[Index+1].SuperSpeed=DB;
-SetPlayerSuperSpeed(PlayerClass,Wonderlands.PlayerAutoMod[Index+1].SuperSpeed);
+function PlayerUI_SetPlayerSuperSpeed(PlayerIndex,Player,DB)
+Wonderlands.PlayerAutoMod[PlayerIndex+1].SuperSpeed=DB;
+Player.Movement.SuperSpeed.Set(DB)
 end
 
 
-function OnSuperSpeedNeeded(PlayerIndex,PlayerClass)
+function OnSuperSpeedNeeded(PlayerIndex,Player)
 if Wonderlands.PlayerAutoMod[PlayerIndex+1].SuperSpeed==true then
-SetPlayerSuperSpeed(PlayerClass,true);
-else
-if GetPlayerSuperSpeed(PlayerClass)==true then
-SetPlayerSuperSpeed(PlayerClass,false);
-end
+Player.Movement.SuperSpeed.Set(true)
 end
 end
 
 
 function PlayerUI_SuperSpeedClick(sender)
-PlayerUI_BoolButtonClickHandler(GetPlayerSuperSpeed,PlayerUI_SetPlayerSuperSpeed,PlayerUI_RefreshSuperSpeedButton);
+PlayerUI_BoolButtonClickHandler(function(Player);return Player.Movement.SuperSpeed.Get();end,PlayerUI_SetPlayerSuperSpeed,PlayerUI_RefreshSuperSpeedButton);
 end
 
 
@@ -396,46 +377,42 @@ end
 
 
 
-function MaxMoneyHandler(Index,PlayerClass,bool)
+function MaxMoneyHandler(PlayerIndex,Player,bool)
 Wonderlands.PlayerAutoMod[PlayerIndex+1].MaxMoney=bool;
 if bool then
-MaxPlayerMoney(PlayerClass);
-MaxPlayerCrystals(PlayerClass);
-MaxPlayerSouls(PlayerClass);
-MaxPlayerRainbowGems(PlayerClass);
+Player.Currency.MaxAll();
 else
-SetPlayerMoney(PlayerClass,GetPlayerMoney(PlayerClass)-1)
+Player.Currency.Money.Set(Player.Currency.Money.Get()-1)
 end
 end
 
-function OnMaxMoneyNeeded(PlayerIndex,PlayerClass)
+function OnMaxMoneyNeeded(PlayerIndex,Player)
 if Wonderlands.PlayerAutoMod[PlayerIndex+1].MaxMoney==true then
-SetPlayerSuperSpeed(PlayerClass,true);
+Player.Currency.MaxAll()
 end
 end
 
 function PlayerUI_MoneyBoxClick(sender)
-PlayerUI_BoolButtonClickHandler(GetPlayerMaxMoney,MaxMoneyHandler,PlayerUI_RefreshMoneyBoxButton);
+PlayerUI_BoolButtonClickHandler(function(Player);return Player.Currency.Money.Get()==Player.Currency.MaxInteger;end,MaxMoneyHandler,PlayerUI_RefreshMoneyBoxButton);
 end
 
 
 
 
 
-function NoclipHandler(Index,PlayerClass,bool)
-Wonderlands.PlayerAutoMod[Index+1].Noclip=bool;
-SetFlyAndNoclip(PlayerClass,bool);
+function NoclipHandler(PlayerIndex,Player,DB)
+Wonderlands.PlayerAutoMod[PlayerIndex+1].Noclip=DB;
+Player.NoclipAndFly.Set(DB);
 end
 
-function OnNoclipNeeded(PlayerIndex,PlayerClass)
+function OnNoclipNeeded(PlayerIndex,Player)
 if Wonderlands.PlayerAutoMod[PlayerIndex+1].Noclip==true then
-SetFlyAndNoclip(PlayerClass,true);
+Player.NoclipAndFly.Set(true);
 end
 end
-
 
 function PlayerUI_FlyBoxClick(sender)
-PlayerUI_BoolButtonClickHandler(GetFlyAndNoclip,NoclipHandler,PlayerUI_RefreshFlyBoxButton);
+PlayerUI_BoolButtonClickHandler(function(Player);return Player.NoclipAndFly.Get();end,NoclipHandler,PlayerUI_RefreshFlyBoxButton);
 end
 
 
@@ -443,62 +420,49 @@ end
 
 
 
-function DamageHandler(Index,PlayerClass,bool)
-Wonderlands.PlayerAutoMod[PlayerIndex+1].Damage=bool;
-SetPlayerMaxDamage(PlayerClass,bool);
+function PlayerUI_DamageHandler(PlayerIndex,Player,DB)
+Wonderlands.PlayerAutoMod[PlayerIndex+1].Damage=DB;
+if DB then
+Player.MaxDamageModifier();
+Player.MaxCriticalChance();
+else
+Player.ResetDamageModifier();
+Player.ResetCriticalChance();
+end
 end
 
-function OnDamageNeeded(PlayerIndex,PlayerClass)
+function OnDamageNeeded(PlayerIndex,Player)
 if Wonderlands.PlayerAutoMod[PlayerIndex+1].Damage==true then
-if GetPlayerMaxDamage(PlayerClass)==false then
-SetPlayerMaxDamage(PlayerClass,true);
-end
+Player.MaxDamageModifier();
+Player.MaxCriticalChance();
 end
 end
 
 
 function PlayerUI_DamageBoxClick(sender)
-PlayerUI_BoolButtonClickHandler(GetPlayerMaxDamage,DamageHandler,PlayerUI_RefreshDamageBoxButton);
+PlayerUI_BoolButtonClickHandler(function(Player);return Player.DamageModifier.Get()>2 and Player.CriticalChance.Get()>2;end,PlayerUI_DamageHandler,PlayerUI_RefreshDamageBoxButton);
 end
 
 
 
 
-
-
-
-
-function InvisibleHandler(Index,PlayerClass,bool)
-Wonderlands.PlayerAutoMod[PlayerIndex+1].Invisible=bool;
-SetPlayerVisibility(PlayerClass,bool);
+function NoTargetHandler(PlayerIndex,Player,DB)
+Wonderlands.PlayerAutoMod[PlayerIndex+1].NoTarget=DB;
 end
 
-function OnInvisibleNeeded(PlayerIndex,PlayerClass)
-if Wonderlands.PlayerAutoMod[PlayerIndex+1].Invisible==true then
-SetPlayerVisibility(PlayerClass,true);
-end
-end
-
-function PlayerUI_InvisibleBoxClick(sender)
-PlayerUI_BoolButtonClickHandler(GetPlayerVisibility,InvisibleHandler,PlayerUI_RefreshDamageBoxButton);
-PlayerUI_RefreshInvisibleBoxButton();
+function OnNoTargetNeeded(PlayerIndex,Player)
+local DB=Wonderlands.PlayerAutoMod[PlayerIndex+1].NoTarget;
+Player.IsTargetable.Set(DB);
+Player.IsVisible.Set(DB);
 end
 
-
-
-function NoTargetHandler(Index,PlayerClass,bool)
-Wonderlands.PlayerAutoMod[PlayerIndex+1].NoTarget=bool;
-SetPlayerNoTarget(PlayerClass,bool);
-end
-
-function OnNoTargetNeeded(PlayerIndex,PlayerClass)
-if Wonderlands.PlayerAutoMod[PlayerIndex+1].NoTarget==true then
-SetPlayerNoTarget(PlayerClass,true);
-end
-end
+PlayerUI_NotargetGet=function(Player);
+return  Player.IsTargetable.Get() and 
+Player.IsVisible.Get();
+end;
 
 function PlayerUI_NoTargetBoxClick(sender)
-PlayerUI_BoolButtonClickHandler(GetPlayerNoTarget,NoTargetHandler,PlayerUI_RefreshNoTargetBoxButton);
+PlayerUI_BoolButtonClickHandler(PlayerUI_NotargetGet,NoTargetHandler,PlayerUI_RefreshNoTargetBoxButton);
 end
 
 
@@ -509,84 +473,85 @@ end
     Refresh Functions
 ]]
 function PlayerUI_RefreshGodModeButton()
-PlayerUI_SetupBoolButton(PlayerUI.GodBox,GetPlayerGodmode,"God Mode");
+PlayerUI_SetupBoolButton(PlayerUI.GodBox,function(Player);return Player.Godmode.Get();end,"God Mode");
 end
 
 function PlayerUI_RefreshAmmoButton()
-PlayerUI_SetupBoolButton(PlayerUI.AmmoBox,function(PlayerClass);return GetPlayerAmmoRegen(PlayerClass)~=0;end,"Infinate Ammo");
+PlayerUI_SetupBoolButton(PlayerUI.AmmoBox,function(Player);return Player.AmmoRegen.Get()~=0;end,"Infinate Ammo");
 end
 
 
 function PlayerUI_RefreshSuperSpeedButton()
-PlayerUI_SetupBoolButton(PlayerUI.SuperSpeed,GetPlayerSuperSpeed,"Super Speed");
+PlayerUI_SetupBoolButton(PlayerUI.SuperSpeed,function(Player);return Player.Movement.SuperSpeed.Get();end,"Super Speed");
 end
 
 function PlayerUI_RefreshSuperJumpButton()
-PlayerUI_SetupBoolButton(PlayerUI.SuperJump,GetPlayerSuperJump,"Super Jump");
+PlayerUI_SetupBoolButton(PlayerUI.SuperJump,function(Player);return Player.Movement.SuperJump.Get();end,"Super Jump");
 end
 
 function PlayerUI_RefreshFlyBoxButton()
-PlayerUI_SetupBoolButton(PlayerUI.FlyBox,GetFlyAndNoclip,"Fly And Noclip");
+PlayerUI_SetupBoolButton(PlayerUI.FlyBox,function(Player);return Player.NoclipAndFly.Get();end,"Fly And Noclip");
 end
 
 
 function PlayerUI_RefreshMoneyBoxButton()
-PlayerUI_SetupBoolButton(PlayerUI.MoneyBox,GetPlayerMaxMoney,"Max Money");
+PlayerUI_SetupBoolButton(PlayerUI.MoneyBox,function(Player);return Player.Currency.Money.Get()==Player.Currency.MaxInteger;end,"Max Money");
 end
 
 function PlayerUI_RefreshDamageBoxButton()
-PlayerUI_SetupBoolButton(PlayerUI.DamageBox,GetPlayerMaxDamage,"Max Damage");
+PlayerUI_SetupBoolButton(PlayerUI.DamageBox,function(Player);return Player.DamageModifier.Get()>2 and Player.CriticalChance.Get()>2;end,"Max Damage");
 end
 
 
 function PlayerUI_RefreshInvisibleBoxButton()
-PlayerUI_SetupBoolButton(PlayerUI.InvisibleBox,GetPlayerVisibility,"Is Visible");
+PlayerUI.InvisibleBox.Enabled=false;
+PlayerUI.InvisibleBox.Visible=false;
 end
 function PlayerUI_RefreshNoTargetBoxButton()
-PlayerUI_SetupBoolButton(PlayerUI.NoTargetBox,GetPlayerNoTarget,"No Target");
+PlayerUI_SetupBoolButton(PlayerUI.NoTargetBox,PlayerUI_NotargetGet,"No Target");
 end
 
 
 
 function PlayerUI_SetHealthClick(sender)
 local NUM=tonumber(PlayerUI.HealthModifier.Text);
-PlayerUI_ForeachSelectedPlayer(function(PlayerClass)
-SetPlayerHealth(PlayerClass,NUM);
+PlayerUI_ForeachSelectedPlayer(function(Player)
+Player.Health.CurrentValue.Set(NUM);
 end);
 PlayerUI_ReloadHP_Values();
 end
 
 function PlayerUI_SetMaxHealthClick(sender)
 local NUM=tonumber(PlayerUI.MaxHealthModifier.Text);
-PlayerUI_ForeachSelectedPlayer(function(PlayerClass)
-SetPlayerMaxHealth(PlayerClass,NUM);
+PlayerUI_ForeachSelectedPlayer(function(Player)
+Player.Health.MaxValue.Set(NUM);
 end);
 PlayerUI_ReloadHP_Values();
 end
 
 function PlayerUI_SetSheildClick(sender)
 local NUM=tonumber(PlayerUI.SheildModifier.Text);
-PlayerUI_ForeachSelectedPlayer(function(PlayerClass)
-SetPlayerShield(PlayerClass,NUM);
+PlayerUI_ForeachSelectedPlayer(function(Player)
+Player.Shield.CurrentValue.Set(NUM);
 end);
 PlayerUI_ReloadHP_Values();
 end
 
 function PlayerUI_SetMaxSheildClick(sender)
 local NUM=tonumber(PlayerUI.MaxSheildModifier.Text);
-PlayerUI_ForeachSelectedPlayer(function(PlayerClass)
-SetPlayerMaxShield(PlayerClass,NUM);
+PlayerUI_ForeachSelectedPlayer(function(Player)
+Player.Shield.MaxValue.Set(NUM);
 end);
 PlayerUI_ReloadHP_Values();
 end
 
 function PlayerUI_ReloadHP_Values()
-local PlayerClass=PlayerUI_GetFirstSelectedPlayerClass();
-if PlayerClass~=nil then
-PlayerUI.HealthModifier.setCaption(GetPlayerHealth(PlayerClass));
-PlayerUI.MaxHealthModifier.setCaption(GetPlayerMaxHealth(PlayerClass));
-PlayerUI.SheildModifier.setCaption(GetPlayerShield(PlayerClass));
-PlayerUI.MaxSheildModifier.setCaption(GetPlayerMaxShield(PlayerClass));
+local Player=PlayerUI_GetFirstSelectedPlayer();
+if Player~=nil then
+PlayerUI.HealthModifier.setCaption(Player.Health.CurrentValue.Get());
+PlayerUI.MaxHealthModifier.setCaption(Player.Health.MaxValue.Get());
+PlayerUI.SheildModifier.setCaption(Player.Shield.CurrentValue.Get());
+PlayerUI.MaxSheildModifier.setCaption(Player.Shield.MaxValue.Get());
 else
 PlayerUI.HealthModifier.setCaption(0);
 PlayerUI.MaxHealthModifier.setCaption(0);
@@ -610,3 +575,51 @@ PlayerUI_RefreshNoTargetBoxButton();
 PlayerUI_ReloadHP_Values();
 PlayerUI_ReloadPetClasses();
 end
+
+
+function PlayerUI_MushroomPetSpawnClick(sender)
+PlayerUI_ForeachSelectedPlayer(function(Player)
+Player.Pets.DuplicatePet(0);
+end);
+end
+
+function PlayerUI_DemiLichPetSpawnClick(sender)
+PlayerUI_ForeachSelectedPlayer(function(Player)
+Player.Pets.DuplicatePet(1);
+end);
+end
+
+function PlayerUI_WyvernPetSpawnClick(sender)
+PlayerUI_ForeachSelectedPlayer(function(Player)
+Player.Pets.DuplicatePet(2);
+end);
+end
+
+function PlayerUI_PetsSetClassesClick(sender)
+PlayerUI_ForeachSelectedPlayer(function(Player)
+Player.Pets.PetClass.Set(0,GetAddress(PlayerUI.MushroomPetClass.Text));
+Player.Pets.PetClass.Set(1,GetAddress(PlayerUI.DemiLichPetClass.Text));
+Player.Pets.PetClass.Set(2,GetAddress(PlayerUI.WyvernPetClass.Text));
+
+end);
+PlayerUI_ReloadPetClasses();
+end
+
+function PlayerUI_ReloadPetClasses()
+PlayerUI.MushroomPetClass.Text=NHA_CE.HEX.ConvertFromInt64(PlayerUI_GetDefaultValue(function(Player);return
+Player.Pets.PetClass.Get(0);end,0x00000000));
+
+PlayerUI.DemiLichPetClass.Text=NHA_CE.HEX.ConvertFromInt64(PlayerUI_GetDefaultValue(function(Player);return
+Player.Pets.PetClass.Get(1);end,0x00000000));
+
+PlayerUI.WyvernPetClass.Text=NHA_CE.HEX.ConvertFromInt64(PlayerUI_GetDefaultValue(function(Player);return
+Player.Pets.PetClass.Get(2);end,0x00000000));
+
+end
+
+
+function PlayerUI_RefreshPetValuesClick(sender)
+PlayerUI_ReloadPetClasses();
+end
+
+

@@ -2,20 +2,18 @@
 
 function PlayerUI_TP_All_To_Host_Map_LocationClick(sender)
 local MapXYZ=HostMapLocation();
-PlayerUI_ForeachSelectedPlayer(function(PlayerClass)
-SetEntityPositionX(PlayerClass,MapXYZ.Z) -- X Coord
-SetEntityPositionY(PlayerClass,MapXYZ.Y) -- Y Coord
-SetEntityPositionZ(PlayerClass,MapXYZ.Z) -- Z Coord
+PlayerUI_ForeachSelectedPlayer(function(Player)
+Player.Position.Value.Set(MapXYZ.X,MapXYZ.Y,MapXYZ.Z);
 end);
 end
 
 function PlayerUI_TP_ToFirstSelectedClick(sender)
-TeleportEntityToEntity(GetPlayerX(0),PlayerUI_GetFirstSelectedPlayerClass());
+Players.Host.TeleportToPlayer(PlayerUI_GetFirstSelectedPlayer());
 end
 
 function PlayerUI_TP_All_To_HostClick(sender)
-PlayerUI_ForeachSelectedPlayer(function(PlayerClass)
-TeleportEntityToEntity(PlayerClass,GetPlayerX(0));
+PlayerUI_ForeachSelectedPlayer(function(Player)
+Player.TeleportToPlayer(Players.Host);
 end);
 end
 
@@ -47,15 +45,12 @@ PlayerUI_ForeachSelectedPlayer(PlayerUI_TeleportPlayerToSelectedNode);
 end
 
 local NHA_NodeSense_TeleportTree={};
-function PlayerUI_TeleportPlayerToSelectedNode(PlayerClass)
-if PlayerClass~=nil then
+function PlayerUI_TeleportPlayerToSelectedNode(Player)
+if Player~=nil then
 for DB=1,#NHA_NodeSense_TeleportTree,1 do
 local Position=NHA_NodeSense_TeleportTree[DB]();
 if Position~=nil then
-
-SetEntityPositionX(PlayerClass,Position.X) -- X Coord
-SetEntityPositionY(PlayerClass,Position.Y) -- Y Coord
-SetEntityPositionZ(PlayerClass,Position.Z) -- Z Coord
+Player.Position.Value.Set(Position.X,Position.Y,Position.Z);
 break;
 end
 end

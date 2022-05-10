@@ -11,7 +11,7 @@ if FooterAdded then return end
 local tableFile = findTableFile(FooterLogoFileName)
 if tableFile then
 ----
-local panel = createPanel(AddressList)
+NHA_BOTTOMBAR = createPanel(AddressList)
 local pic = createPicture()
 pic.loadFromStream(tableFile.Stream)
 local bitmap = pic.getBitmap()
@@ -27,15 +27,15 @@ splitter.MinSize = 50 --standardize with MainForm.Splitter1.MinSize
 
 local splitterDblClick = false
 splitter.onMoved = function(sender)
---set new panel height if double click flag has not yet expire
+--set new NHA_BOTTOMBAR height if double click flag has not yet expire
 if splitterDblClick then
-if panel.Height == 1 then --open panel if closed
-panel.Height = bitmap.Height
-else --close panel if opened
-panel.Height = 1
+if NHA_BOTTOMBAR.Height == 1 then --open NHA_BOTTOMBAR if closed
+NHA_BOTTOMBAR.Height = bitmap.Height
+else --close NHA_BOTTOMBAR if opened
+NHA_BOTTOMBAR.Height = 1
 end
---refresh panel position else it bugs out and appear underneath bottom bar
-panel.Top = 0
+--refresh NHA_BOTTOMBAR position else it bugs out and appear underneath bottom bar
+NHA_BOTTOMBAR.Top = 0
 splitter.Top = 0
 else
 splitterDblClick = true
@@ -49,24 +49,24 @@ end
 end
 end
 ---
-panel.width = 10
-panel.top = 0
-panel.left = 10
-panel.Height = bitmap.Height
-panel.Align = alBottom
-panel.Anchors = '[akBottom]'
--- panel.Color = AddressList.getComponent(0).Color
-panel.ParentBackground = true
-panel.BorderStyle = bsSingle
-panel.BevelOuter = bvNone
--- panel.BevelColor = clBlack
-panel.Constraints.MaxHeight = bitmap.Height
-panel.ShowHint = true
-panel.Hint = 'Double Click To Open Discord Invite'
-panel.onDblClick = function(sender)
+NHA_BOTTOMBAR.width = 10
+NHA_BOTTOMBAR.top = 0
+NHA_BOTTOMBAR.left = 10
+NHA_BOTTOMBAR.Height = bitmap.Height
+NHA_BOTTOMBAR.Align = alBottom
+NHA_BOTTOMBAR.Anchors = '[akBottom]'
+-- NHA_BOTTOMBAR.Color = AddressList.getComponent(0).Color
+NHA_BOTTOMBAR.ParentBackground = true
+NHA_BOTTOMBAR.BorderStyle = bsSingle
+NHA_BOTTOMBAR.BevelOuter = bvNone
+-- NHA_BOTTOMBAR.BevelColor = clBlack
+NHA_BOTTOMBAR.Constraints.MaxHeight = bitmap.Height
+NHA_BOTTOMBAR.ShowHint = true
+NHA_BOTTOMBAR.Hint = 'Double Click To Open Discord Invite'
+NHA_BOTTOMBAR.onDblClick = function(sender)
 shellExecute([[https://github.com/dr-NHA/Wonderlands/blob/NHA_Wonderlands/Discord]])
 end
-local authLabel = createLabel(panel)
+local authLabel = createLabel(NHA_BOTTOMBAR)
 authLabel.Top = 2
 authLabel.Caption = AuthorName
 authLabel.Font.Name = 'Lucida Console'
@@ -80,7 +80,7 @@ shellExecute(TablePostUrl)
 end
 local licLabel
 if AddLicenseLabel then
-licLabel = createLabel(panel)
+licLabel = createLabel(NHA_BOTTOMBAR)
 licLabel.Top = 2
 licLabel.Caption = LicenseName
 licLabel.Font.Name = 'Lucida Console'
@@ -101,9 +101,9 @@ end
 end
 end
 end
-panel.onPaint = function(sender)
+NHA_BOTTOMBAR.onPaint = function(sender)
 local cannvas = sender.getCanvas()
-local left = (panel.Width / 2) - (bitmap.Width / 2)
+local left = (NHA_BOTTOMBAR.Width / 2) - (bitmap.Width / 2)
 cannvas.draw(left, 0, bitmap)
 authLabel.Left = left + 72
 -- if licLabel then
@@ -115,7 +115,7 @@ end
 end
 ----
 if splitter then
-panel.Top = 0
+NHA_BOTTOMBAR.Top = 0
 splitter.Top = 0
 end
 ----

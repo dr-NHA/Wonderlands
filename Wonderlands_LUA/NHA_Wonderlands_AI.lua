@@ -1,22 +1,22 @@
 
 function GetAIBalanceState(PlayerClass)
-return GetAddress('['..PlayerClass..']+2560')
+return readPointer(PlayerClass..'+2560')
 end
 
 function SetAIExperienceLevel(PlayerClass,value)
-WriteInteger('['..NHA_CE.HEX.ConvertFromInt64(GetAIBalanceState(PlayerClass))..']+1A8',value)
+WriteInteger(NHA_CE.HEX.ConvertFromInt64(GetAIBalanceState(PlayerClass))..'+1A8',value)
 end
 
 function GetAIExperienceLevel(PlayerClass)
-return ReadInteger('['..NHA_CE.HEX.ConvertFromInt64(GetAIBalanceState(PlayerClass))..']+1A8')
+return ReadInteger(NHA_CE.HEX.ConvertFromInt64(GetAIBalanceState(PlayerClass))..'+1A8')
 end
 
 function SetAIGameStage(PlayerClass,value)
-WriteInteger('['..NHA_CE.HEX.ConvertFromInt64(GetAIBalanceState(PlayerClass))..']+1A4',value)
+WriteInteger(NHA_CE.HEX.ConvertFromInt64(GetAIBalanceState(PlayerClass))..'+1A4',value)
 end
 
 function GetAIGameStage(PlayerClass)
-return ReadInteger('['..NHA_CE.HEX.ConvertFromInt64(GetAIBalanceState(PlayerClass))..']+1A4')
+return ReadInteger(NHA_CE.HEX.ConvertFromInt64(GetAIBalanceState(PlayerClass))..'+1A4')
 end
 
 

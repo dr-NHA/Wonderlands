@@ -141,6 +141,51 @@ return true;
 end
 end
 
+function NHA_CE.DoUniqueScan(InstructionName,Signature,RegionBase,RegionEnd,printnewline)
+NHA_CE.Hook3r.Print("Scanning For Instruction: "..InstructionName);
+local ms = createMemScan()
+ms.OnlyOneResult=true;
+ms.firstScan(soExactValue, vtByteArray, nil, Signature, nil, RegionBase, RegionEnd,
+"*X*C*W", nil, nil , true, nil, nil, nil)
+ms.waitTillDone()
+if ms.result==nil then;
+NHA_CE.Hook3r.Print(InstructionName.."\nCannot Be Found!!!");
+NHA_CE.Hook3r.Print("~@");
+ms.destroy()
+return false;else
+registerSymbol(InstructionName.."::ASM",ms.result );
+NHA_CE.Hook3r.Print("Instruction Found: "..InstructionName..": "..NHA_CE.HEX.ConvertFromInt64(ms.result));
+if printnewline then;
+NHA_CE.Hook3r.Print("~@");end;
+ms.destroy()
+return true;
+end
+end
+
+function NHA_CE.DoUniqueScanMultiResult(Signature,RegionBase,RegionEnd,printnewline)
+NHA_CE.Hook3r.Print("Scanning For Signature: \n"..Signature);
+local ms = createMemScan()
+ms.OnlyOneResult=false;
+ms.firstScan(soExactValue, vtByteArray, nil, Signature, nil, RegionBase, RegionEnd,
+"*X*C*W", nil, nil , true, nil, nil, nil)
+ms.waitTillDone()
+local found = createFoundList(ms)
+found.initialize()
+local Values={};
+if found.Count>0 then;
+for ind=0,found.Count,1 do
+Values[#Values+1]=found[ind];
+end
+end
+if printnewline then;NHA_CE.Hook3r.Print("~@");end;
+ms.destroy();
+found.destroy();
+return Values;
+end
+
+
+
+
 --Scanner For Offset Instruction Bases
 function NHA_CE.InstructionBaseScan(MODULE,InstructionBaseName,Signature,printnewline)
 NHA_CE.Hook3r.Print("Scanning For Instruction: "..InstructionBaseName);
@@ -402,6 +447,9 @@ NHA_CE.HEX={};
 
 --Convert String To Bytes
 function NHA_CE.HEX.ConvertStringToBytes(stringin)
+if stringin==nil then
+return nil
+end
 local DBV={};local INDEX=0;
 for p, c in utf8.codes(stringin) do;DBV[INDEX]=c;INDEX=INDEX+1;end
 return DBV;
@@ -423,7 +471,8 @@ end
 
 --Convert byte-int64 to Hex String
 function NHA_CE.HEX.ConvertFromInt64(NHA_DB)
-if not IsNumber(NHA_DB) then;return NHA_DB;else
+if NHA_DB==nil then;return NHA_DB;end
+if IsNumber(NHA_DB)==false then;return NHA_DB;else
 local DB= string.format('%X',NHA_DB);
 if #DB <2 then
 return "0"..DB;

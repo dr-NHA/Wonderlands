@@ -251,9 +251,7 @@ end
 
 --Set X
 function SetPickupPositionX(PlayerClass,x)
-DoIfPlayerIsntNull(PlayerClass,function(_DR_NHA_IS_BOSS)
 WriteFloat('[['..PlayerClass..']'.."+168"..']+220',x);
-end);
 end;
 --Get X
 function GetPickupPositionX(PlayerClass)
@@ -261,9 +259,7 @@ return readFloat('[['..PlayerClass..']'.."+168"..']+220');
 end
 --Set Y
 function SetPickupPositionY(PlayerClass,y)
-DoIfPlayerIsntNull(PlayerClass,function(_DR_NHA_IS_BOSS)
 WriteFloat('[['..PlayerClass..']'.."+168"..']+224',y);
-end);
 end;
 --Get Y
 function GetPickupPositionY(PlayerClass)
@@ -271,9 +267,7 @@ return readFloat('[['..PlayerClass..']'.."+168"..']+224');
 end
 --Set Z
 function SetPickupPositionZ(PlayerClass,z)
-DoIfPlayerIsntNull(PlayerClass,function(_DR_NHA_IS_BOSS)
 WriteFloat('[['..PlayerClass..']'.."+168"..']+228',z);
-end);
 end;
 --Get Z
 function GetPickupPositionZ(PlayerClass)
