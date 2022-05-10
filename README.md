@@ -9,6 +9,21 @@ https://github.com/dr-NHA/Wonderlands/archive/refs/heads/NHA_Wonderlands.zip
 **-------------------------------------------**
 
 # **Update Info:**
+## *Update Name: V4.3*
+
+**1. Added A Dupe Method Via The Bank!**
+
+**2. Fixed The Issue With Safe Locations Breaking The Game On Exit To Main Menu!**
+
+**3. Major Lua Fixes / Changes!**
+
+**4. Setup The UI Thread!!!**
+
+**5. Many More Fixes!!!**
+
+**-------------------------------------------**
+
+# **Update Info:**
 ## *Update Name: V4.25*
 
 **0.5 Source Code Has Been Split Into Several Lua Files To Make It Easier To View And Update Code!**
